@@ -195,3 +195,32 @@ jhipster:
 # ===================================================================
 
 # application:
+order:
+  ribbon:
+    listOfServers: localhost:8081
+
+wallet:
+  ribbon:
+    listOfServers: localhost:8082
+
+easytrans:
+  master:
+    zk:
+      zooKeeperUrl: localhost:2281
+  stringcodec:
+    zk:
+      zooKeeperUrl: ${easytrans.master.zk.zooKeeperUrl}
+  idgen:
+    trxId:
+      zkSnow:
+        zooKeeperUrl: ${easytrans.master.zk.zooKeeperUrl}
+  log:
+    database:
+      logCleanEnabled: true
+      logReservedDays: 14
+      logCleanTime: 01:22:00
+      druid:
+        driverClassName: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/easytx_order_translog?characterEncoding=UTF-8&useSSL=false
+        username: root
+        password: root

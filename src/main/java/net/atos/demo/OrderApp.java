@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
-//@EnableEasyTransaction
+@EnableEasyTransaction
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient
 public class OrderApp implements InitializingBean {
