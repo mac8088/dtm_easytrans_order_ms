@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <!--
+        EasyTrans core tables and demo order table.
+        The initial schema has the '00000000000003' id, so that it is over-written if we re-generate it.
+    -->
+    <changeSet id="00000000000003" author="jhipster">
+        <!--
+            Added the entity ExecutedTrans.
+        -->
+        <createTable tableName="executed_trans" remarks="执行事务">
+            <column name="app_id" type="integer" remarks="调用的应用代码">
+                <constraints nullable="false" />
+            </column>
+            <column name="bus_code" type="integer" remarks="调用的业务代码">
+                <constraints nullable="false" />
+            </column>
+            <column name="trx_id" type="integer" remarks="调用的事务代码">
+                <constraints nullable="false" />
+            </column>
+            <column name="p_app_id" type="integer" remarks="p_开头的，代表本事务对应的父事务应用代码">
+                <constraints nullable="true" />
+            </column>
+            <column name="p_bus_code" type="integer" remarks="p_开头的，代表本事务对应的父事务业务代码">
+                <constraints nullable="true" />
+            </column>
+            <column name="p_trx_id" type="integer" remarks="p_开头的，代表本事务对应的父事务事务代码">
+                <constraints nullable="true" />
+            </column>
+            <column name="status" type="integer" remarks="记录存在，但status为0表示事务成功,为1表示事务失败（包含父事务和本事务）；status为2表示本方法存在父事务，且父事务的最终状态未知。">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="app_id, bus_code, trx_id" tableName="executed_trans"/>
+        <addUniqueConstraint columnNames="p_app_id, p_bus_code, p_trx_id" tableName="executed_trans"/>
+        <!--
+            Added the entity Idempotent.
+        -->
+        <createTable tableName="idempotent" remarks="幂等">
+            <column name="src_app_id" type="integer" remarks="来源AppID">
+                <constraints nullable="false" />
+            </column>
+            <column name="src_bus_code" type="integer" remarks="来源业务类型">
+                <constraints nullable="false" />
+            </column>
+            <column name="src_trx_id" type="integer" remarks="来源交易ID">
+                <constraints nullable="false" />
+            </column>
+            <column name="app_id" type="integer" remarks="调用AppId">
+                <constraints nullable="false" />
+            </column>
+            <column name="bus_code" type="integer" remarks="调用的业务代码">
+                <constraints nullable="false" />
+            </column>
+            <column name="call_seq" type="integer" remarks="同一事务同一方法内调用的次数">
+                <constraints nullable="false" />
+            </column>
+            <column name="handler" type="integer" remarks="处理者AppId">
+                <constraints nullable="false" />
+            </column>
+            <column name="called_methods" type="varchar(255)" remarks="被调用过的方法名">
+                <constraints nullable="false" />
+            </column>
+            <column name="md5" type="longblob" remarks="参数摘要">
+                <constraints nullable="false" />
+            </column>
+            <column name="sync_method_result" type="${clobType}" remarks="同步方法的返回结果">
+                <constraints nullable="true" />
+            </column>
+            <column name="create_time" type="date" remarks="执行时间">
+                <constraints nullable="false" />
+            </column>
+            <column name="update_time" type="date" remarks="更新时间">
+                <constraints nullable="false" />
+            </column>
+            <column name="lock_version" type="integer" remarks="乐观锁版本号">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+        <addPrimaryKey columnNames="src_app_id, src_bus_code, src_trx_id, app_id, bus_code, call_seq, handler" tableName="idempotent"/>
+        <!--
+            Added the Demo Entity.
+        -->
+        <createTable tableName="biz_order" remarks="订单">
+            <column name="order_id" type="bigint" autoIncrement="${autoIncrement}" remarks="订单标识">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="integer" remarks="用户标识">
+                <constraints nullable="false" />
+            </column>
+            <column name="money" type="integer" remarks="订单金额">
+                <constraints nullable="false" />
+            </column>
+            <column name="create_time" type="date" remarks="创建时间">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
