@@ -28,11 +28,11 @@ public class Order implements Serializable {
 
     @NotNull
     @Column(name = "user_id", nullable = false)
-    private Integer userId;
+    private Long userId;
 
     @NotNull
     @Column(name = "money", nullable = false)
-    private Integer money;
+    private Long money;
 
     @NotNull
     @Column(name = "create_time", nullable = false)
@@ -47,29 +47,29 @@ public class Order implements Serializable {
         this.orderId = id;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public Order userId(Integer userId) {
+    public Order userId(Long userId) {
         this.userId = userId;
         return this;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
-    public Integer getMoney() {
+    public Long getMoney() {
         return money;
     }
 
-    public Order money(Integer money) {
+    public Order money(Long money) {
         this.money = money;
         return this;
     }
 
-    public void setMoney(Integer money) {
+    public void setMoney(Long money) {
         this.money = money;
     }
 

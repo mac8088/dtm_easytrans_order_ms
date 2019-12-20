@@ -91,10 +91,10 @@
             <column name="order_id" type="bigint" autoIncrement="${autoIncrement}" remarks="订单标识">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="user_id" type="integer" remarks="用户标识">
+            <column name="user_id" type="bigint" remarks="用户标识">
                 <constraints nullable="false" />
             </column>
-            <column name="money" type="integer" remarks="订单金额">
+            <column name="money" type="bigint" remarks="订单金额">
                 <constraints nullable="false" />
             </column>
             <column name="create_time" type="date" remarks="创建时间">

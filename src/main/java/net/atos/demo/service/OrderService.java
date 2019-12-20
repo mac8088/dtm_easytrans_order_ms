@@ -85,7 +85,7 @@ public class OrderService {
     
     
 	@Transactional
-	public Optional<Order> buySomething(int userId, int money) {
+	public Optional<Order> buySomething(long userId, long money) {
 		log.warn("enter buy service for user: {} with money: {}", userId, money);
 		//local transaction
 		Order localOrder = new Order();

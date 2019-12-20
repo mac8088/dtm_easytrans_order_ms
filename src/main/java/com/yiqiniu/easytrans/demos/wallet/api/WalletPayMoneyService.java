@@ -20,23 +20,23 @@ public interface WalletPayMoneyService {
 
 		private static final long serialVersionUID = 1L;
 
-		private Integer userId;
+		private Long userId;
 
-		private Integer payAmount;
+		private Long payAmount;
 
-		public Integer getPayAmount() {
+		public Long getPayAmount() {
 			return payAmount;
 		}
 
-		public void setPayAmount(Integer payAmount) {
+		public void setPayAmount(Long payAmount) {
 			this.payAmount = payAmount;
 		}
 
-		public Integer getUserId() {
+		public Long getUserId() {
 			return userId;
 		}
 
-		public void setUserId(Integer userId) {
+		public void setUserId(Long userId) {
 			this.userId = userId;
 		}
 	}
@@ -45,13 +45,13 @@ public interface WalletPayMoneyService {
 
 		private static final long serialVersionUID = 1L;
 
-		private Integer freezeAmount;
+		private Long freezeAmount;
 
-		public Integer getFreezeAmount() {
+		public Long getFreezeAmount() {
 			return freezeAmount;
 		}
 
-		public void setFreezeAmount(Integer freezeAmount) {
+		public void setFreezeAmount(Long freezeAmount) {
 			this.freezeAmount = freezeAmount;
 		}
 
