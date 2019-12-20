@@ -1,9 +1,6 @@
 package net.atos.demo.service;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 
 import javax.annotation.Resource;
@@ -12,19 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import net.atos.demo.domain.Order;
-import net.atos.demo.repository.OrderRepository;
 
 import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService;
 import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService.WalletPayRequestVO;
 import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService.WalletPayResponseVO;
+
+import net.atos.demo.domain.Order;
+import net.atos.demo.repository.OrderRepository;
 
 /**
  * Service Implementation for managing {@link Order}.
@@ -40,9 +33,6 @@ public class OrderService {
 	@Resource
 	private WalletPayMoneyService payService;
 	
-	@Resource
-	private JdbcTemplate jdbcTemplate;
-
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
@@ -93,15 +83,26 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
     
+    
 	@Transactional
-	public String buySomething(int userId, long money) {
+	public Optional<Order> buySomething(int userId, int money) {
+		log.warn("enter buy service for user: {} with money: {}", userId, money);
 		//local transaction
-		int id = saveOrderRecord(userId, money);
+		Order localOrder = new Order();
+		localOrder.setUserId(userId);
+		localOrder.setMoney(money);
+		localOrder.setCreateTime(LocalDate.now());
+		Order dbOrder = save(localOrder);
+		log.warn("saved order");
+		long id = dbOrder.getOrderId();
+		log.warn("get orderId from saved order: {}", id);
+		
+		//prepare TCC VO
 		WalletPayRequestVO request = new WalletPayRequestVO();
 		request.setUserId(userId);
 		request.setPayAmount(money);
 
-		//RPC call via proxy
+		//RPC call via PROXY
 		WalletPayResponseVO pay = payService.pay(request);
 
 		// hard coding with: if order Id MOD 3 == 0
@@ -109,27 +110,50 @@ public class OrderService {
 			throw new RuntimeException("throw unknown exception with wrong order (MOD 3): " + id);
 		}
 
-		return "id:" + id + " freezed:" + pay.getFreezeAmount();
-	}
-	
-	private Integer saveOrderRecord(final int userId, final long money) {
-
-		final String INSERT_SQL = "INSERT INTO biz_order (order_id, user_id, money, create_time) VALUES ( nextval('SEQUENCE_GENERATOR'), ?, ?, ?);";
-		KeyHolder keyHolder = new GeneratedKeyHolder();
-		jdbcTemplate.update(
-		    new PreparedStatementCreator() {
-		    	@Override
-		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
-		            PreparedStatement ps =
-		                connection.prepareStatement(INSERT_SQL, new String[] {"order_id"});
-		            ps.setInt(1, userId);
-		            ps.setLong(2, money);
-		            ps.setDate(3, new Date(System.currentTimeMillis()));
-		            return ps;
-		        }
-		    },
-		    keyHolder);
+		log.warn("OrderId {} freezed: {}", id, pay.getFreezeAmount());
 		
-		return keyHolder.getKey().intValue();
+		//warp
+		return Optional.of(dbOrder);
+		
 	}
+    
+//	@Transactional
+//	public String buySomething(int userId, int money) {
+//		//local transaction
+//		int id = saveOrderRecord(userId, money);
+//		WalletPayRequestVO request = new WalletPayRequestVO();
+//		request.setUserId(userId);
+//		request.setPayAmount(money);
+//
+//		//RPC call via proxy
+//		WalletPayResponseVO pay = payService.pay(request);
+//
+//		// hard coding with: if order Id MOD 3 == 0
+//		if (id % 3 == 0) {
+//			throw new RuntimeException("throw unknown exception with wrong order (MOD 3): " + id);
+//		}
+//
+//		return "id:" + id + " freezed:" + pay.getFreezeAmount();
+//	}
+//	
+//	private Integer saveOrderRecord(final int userId, final long money) {
+//
+//		final String INSERT_SQL = "INSERT INTO biz_order (order_id, user_id, money, create_time) VALUES ( nextval('SEQUENCE_GENERATOR'), ?, ?, ?);";
+//		KeyHolder keyHolder = new GeneratedKeyHolder();
+//		jdbcTemplate.update(
+//		    new PreparedStatementCreator() {
+//		    	@Override
+//		        public PreparedStatement createPreparedStatement(Connection connection) throws SQLException {
+//		            PreparedStatement ps =
+//		                connection.prepareStatement(INSERT_SQL, new String[] {"order_id"});
+//		            ps.setInt(1, userId);
+//		            ps.setLong(2, money);
+//		            ps.setDate(3, new Date(System.currentTimeMillis()));
+//		            return ps;
+//		        }
+//		    },
+//		    keyHolder);
+//		
+//		return keyHolder.getKey().intValue();
+//	}
 }

@@ -11,6 +11,8 @@ import java.io.Serializable;
  * 4. the return parameter can also be Future<>, the generalization parameter class should be like point 3
  */
 public interface WalletPayMoneyService {
+	
+	public static final String APPID = "wallet";
 
 	WalletPayResponseVO pay(WalletPayRequestVO request);
 
@@ -20,13 +22,13 @@ public interface WalletPayMoneyService {
 
 		private Integer userId;
 
-		private Long payAmount;
+		private Integer payAmount;
 
-		public Long getPayAmount() {
+		public Integer getPayAmount() {
 			return payAmount;
 		}
 
-		public void setPayAmount(Long payAmount) {
+		public void setPayAmount(Integer payAmount) {
 			this.payAmount = payAmount;
 		}
 
@@ -43,13 +45,13 @@ public interface WalletPayMoneyService {
 
 		private static final long serialVersionUID = 1L;
 
-		private Long freezeAmount;
+		private Integer freezeAmount;
 
-		public Long getFreezeAmount() {
+		public Integer getFreezeAmount() {
 			return freezeAmount;
 		}
 
-		public void setFreezeAmount(Long freezeAmount) {
+		public void setFreezeAmount(Integer freezeAmount) {
 			this.freezeAmount = freezeAmount;
 		}
 

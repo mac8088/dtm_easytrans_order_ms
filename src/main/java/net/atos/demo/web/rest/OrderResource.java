@@ -126,4 +126,18 @@ public class OrderResource {
         orderService.delete(id);
         return ResponseEntity.noContent().headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString())).build();
     }
+    
+    /**
+     * {@code GET  /orders/:userId/:money} : buySth with userId and money, then create the order.
+     *
+     * @param userId who create the order?
+     * @param money how many money did it take?.
+     * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the order, or with status {@code 404 (Not Found)}.
+     */
+    @GetMapping("/orders/buysth/{userId}/{money}")
+    public ResponseEntity<Order> buySomething(@PathVariable int userId, @PathVariable int money) {
+        log.debug("REST request buySth with user: {} money: {}", userId, money);
+        Optional<Order> order = orderService.buySomething(userId, money);
+        return ResponseUtil.wrapOrNotFound(order);
+    }
 }
