@@ -21,7 +21,7 @@
             <column name="bus_code" type="integer" remarks="调用的业务代码">
                 <constraints nullable="false" />
             </column>
-            <column name="trx_id" type="integer" remarks="调用的事务代码">
+            <column name="trx_id" type="long" remarks="调用的事务代码">
                 <constraints nullable="false" />
             </column>
             <column name="p_app_id" type="integer" remarks="p_开头的，代表本事务对应的父事务应用代码">
@@ -30,7 +30,7 @@
             <column name="p_bus_code" type="integer" remarks="p_开头的，代表本事务对应的父事务业务代码">
                 <constraints nullable="true" />
             </column>
-            <column name="p_trx_id" type="integer" remarks="p_开头的，代表本事务对应的父事务事务代码">
+            <column name="p_trx_id" type="long" remarks="p_开头的，代表本事务对应的父事务事务代码">
                 <constraints nullable="true" />
             </column>
             <column name="status" type="integer" remarks="记录存在，但status为0表示事务成功,为1表示事务失败（包含父事务和本事务）；status为2表示本方法存在父事务，且父事务的最终状态未知。">
@@ -49,7 +49,7 @@
             <column name="src_bus_code" type="integer" remarks="来源业务类型">
                 <constraints nullable="false" />
             </column>
-            <column name="src_trx_id" type="integer" remarks="来源交易ID">
+            <column name="src_trx_id" type="long" remarks="来源交易ID">
                 <constraints nullable="false" />
             </column>
             <column name="app_id" type="integer" remarks="调用AppId">
