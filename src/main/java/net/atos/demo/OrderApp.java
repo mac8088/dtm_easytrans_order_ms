@@ -14,9 +14,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
 import com.yiqiniu.easytrans.EnableEasyTransaction;
+import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService;
+import com.yiqiniu.easytrans.demos.wallet.api.requestcfg.WalletPayRequestCfg;
+import com.yiqiniu.easytrans.util.CallWrapUtil;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -107,4 +111,12 @@ public class OrderApp implements InitializingBean {
         log.info("\n----------------------------------------------------------\n\t" +
                 "Config Server: \t{}\n----------------------------------------------------------", configServerStatus);
     }
+    
+	/**
+	 * create WalletPayMoneyService instance, you can inject the instance to call wallet TCC service
+	 */
+	@Bean
+	public WalletPayMoneyService payService(CallWrapUtil util) {
+		return util.createTransactionCallInstance(WalletPayMoneyService.class, WalletPayRequestCfg.class);
+	}
 }
