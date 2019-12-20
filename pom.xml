@@ -214,7 +214,20 @@
 					<groupId>com.yiqiniu.easytrans</groupId>
 					<artifactId>easytrans-queue-kafka-starter</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.apache.curator</groupId>
+					<artifactId>curator-recipes</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.zookeeper</groupId>
+					<artifactId>zookeeper</artifactId>
+				</exclusion>
 			</exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.yiqiniu.easytrans</groupId>
+            <artifactId>easytrans-extensionsuite-database-starter</artifactId>
+            <version>${easytrans.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

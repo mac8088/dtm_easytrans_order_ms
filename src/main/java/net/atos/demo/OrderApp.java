@@ -20,6 +20,7 @@ import org.springframework.core.env.Environment;
 import com.yiqiniu.easytrans.EnableEasyTransaction;
 import com.yiqiniu.easytrans.demos.wallet.api.WalletPayMoneyService;
 import com.yiqiniu.easytrans.demos.wallet.api.requestcfg.WalletPayRequestCfg;
+import com.yiqiniu.easytrans.extensionsuite.impl.database.EnableExtensionSuiteDatabaseImpl;
 import com.yiqiniu.easytrans.util.CallWrapUtil;
 
 import java.net.InetAddress;
@@ -28,6 +29,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @SpringBootApplication
+@EnableExtensionSuiteDatabaseImpl
 @EnableEasyTransaction
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
 @EnableDiscoveryClient

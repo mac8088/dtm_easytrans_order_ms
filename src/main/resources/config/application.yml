@@ -204,23 +204,29 @@ wallet:
     listOfServers: localhost:8082
 
 easytrans:
-  master:
-    zk:
-      zooKeeperUrl: localhost:2281
-  stringcodec:
-    zk:
-      zooKeeperUrl: ${easytrans.master.zk.zooKeeperUrl}
-  idgen:
-    trxId:
-      zkSnow:
-        zooKeeperUrl: ${easytrans.master.zk.zooKeeperUrl}
-  log:
+  extensionsuite: # 扩展套装，如基于数据库实现的 选主、字符串编码、id生成器、事务日志等
     database:
+      enabled: true
       logCleanEnabled: true
       logReservedDays: 14
       logCleanTime: 01:22:00
-      druid:
-        driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/easytx_order_translog?characterEncoding=UTF-8&useSSL=false
+      tablePrefix: ''
+      dbSetting: # extension suite 公用的数据源的配置，不一定要配置为当前业务数据库，可公用一个配置，也可以每个业务库单独配置一个
+        driverClassName: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/easytx_common_translog?characterEncoding=UTF-8&useSSL=false
         username: root
         password: root
+# close the default implement to use database extensionsuite
+  log:
+    database:
+      enabled: false
+  master:
+    zk:
+      enabled: false
+  stringcodec:
+    zk:
+      enabled: false
+  idgen:
+    trxId:
+      zkSnow:
+        enabled: false
